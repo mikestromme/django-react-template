@@ -9,8 +9,8 @@ import {useForm} from 'react-hook-form'
 import AxiosInstance from './Axios'
 import Dayjs from 'dayjs'
 import {useNavigate} from 'react-router-dom'
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+//import { yupResolver } from "@hookform/resolvers/yup"
+//import * as yup from "yup"
 
 const Create = () => {
 
