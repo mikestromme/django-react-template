@@ -50,6 +50,8 @@ CORS_ORIGIN_ALLOW = [
 
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 ROOT_URLCONF = "crud.urls"
 
 TEMPLATES = [

@@ -8,11 +8,12 @@ import MyMultiLineField from './forms/MyMultilineField'
 import {useForm} from 'react-hook-form'
 import AxiosInstance from './Axios'
 import Dayjs from 'dayjs'
-import {useNavigate} from 'react-router-dom'
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import {useNavigate, useParams} from 'react-router-dom'
 
-const Create = () => {
+const Edit = () => {
+  const MyParam = useParams()
+  const MyId = MyParam.id
+
 
   const [projectmanager,setProjectmanager] = useState()
   const [loading,setLoading] = useState(true)
@@ -24,12 +25,25 @@ const Create = () => {
     {id:'Completed', name:'Completed'}, 
   ]
 
+
   const GetData = () => {
     AxiosInstance.get(`projectmanager/`).then((res) =>{
       setProjectmanager(res.data)
       console.log(res.data)
+
+    })
+
+    AxiosInstance.get(`project/${MyId}`).then((res) =>{
+      console.log(res.data)
+      setValue('name',res.data.name)
+      setValue('status',res.data.status)
+      setValue('projectmanager',res.data.projectmanager)
+      setValue('comments',res.data.comments)
+      setValue('start_date',Dayjs(res.data.start_date))
+      setValue('end_date',Dayjs(res.data.end_date))
       setLoading(false)
     })
+
   }
 
   useEffect(() => {
@@ -44,26 +58,13 @@ const Create = () => {
     
   }
 
-  const schema = yup
-  .object({
-    name: yup.string().required('Name is a required field'),
-    projectmanager: yup.string().required('Project manager is a required field'),
-    status: yup.string().required('Status is a required field'),
-    comments: yup.string(), 
-    start_date: yup.date().required('Start date is a required field'), 
-    end_date: yup.date().required('End date is a required field').min(yup.ref('start_date'),'The end date can not be before the start date'), 
-  })
-
-
-  const {handleSubmit, control} = useForm({defaultValues:defaultValues, resolver: yupResolver(schema)})
-
-
+  const {handleSubmit, setValue, control} = useForm({defaultValues:defaultValues})
     const submission = (data) => 
     {
       const StartDate = Dayjs(data.start_date["$d"]).format("YYYY-MM-DD")
       const EndDate = Dayjs(data.end_date["$d"]).format("YYYY-MM-DD")
       
-      AxiosInstance.post( `project/`,{
+      AxiosInstance.put( `project/${MyId}/`,{
         name: data.name,
         projectmanager: data.projectmanager,
         status: data.status,
@@ -82,13 +83,12 @@ const Create = () => {
   
   return (
     <div>
-
-    { loading ? <p>Loading data...</p> :
+      { loading ? <p>Loading data...</p> :
       <form onSubmit={handleSubmit(submission)}>
 
       <Box sx={{display:'flex', justifyContent:'space-between',width:'100%', backgroundColor:'#00003f', marginBottom:'10px'}}>
          <Typography sx={{marginLeft:'20px', color:'#fff'}}>
-            Create records
+            Edit record
          </Typography>
 
       </Box>
@@ -102,7 +102,6 @@ const Create = () => {
                 control={control}
                 placeholder="Provide a project name"
                 width={'30%'}
-                
               />
 
               <MyDatePickerField
@@ -110,7 +109,6 @@ const Create = () => {
                 name="start_date"
                 control={control}
                 width={'30%'}
-
               />
 
               <MyDatePickerField
@@ -118,7 +116,6 @@ const Create = () => {
                 name="end_date"
                 control={control}
                 width={'30%'}
-
               />
 
           </Box>
@@ -130,7 +127,6 @@ const Create = () => {
                 control={control}
                 placeholder="Provide project comments"
                 width={'30%'}
-                
               />
 
               <MySelectField
@@ -141,31 +137,31 @@ const Create = () => {
                 options = {hardcoded_options}
               />
 
+              <MySelectField
+                label="Project manager"
+                name="projectmanager"
+                control={control}
+                width={'30%'}
+                options = {projectmanager}
+              />
 
-                <MySelectField
-                  label="Project manager"
-                  name="projectmanager"
-                  control={control}
-                  width={'30%'}
-                  options = {projectmanager}
-                />
+                
 
-    
           </Box>
 
-          <Box sx={{display:'flex', justifyContent:'start', marginTop:'40px'}}> 
+          <Box sx={{display:'flex', justifyContent:'space-around', marginTop:'40px'}}> 
                 <Button variant="contained" type="submit" sx={{width:'30%'}}>
                    Submit
                 </Button>
           </Box>
 
+          
       </Box>
 
-      </form> }
-
-  
+      </form>
+    }
     </div>
   )
 }
 
-export default Create
+export default Edit
