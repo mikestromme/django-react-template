@@ -9,8 +9,8 @@ import {useForm} from 'react-hook-form'
 import AxiosInstance from './Axios'
 import Dayjs from 'dayjs'
 import {useNavigate} from 'react-router-dom'
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup" // used for form validation
+import * as yup from "yup" // used for form validation
 
 const Create = () => {
 
@@ -44,7 +44,7 @@ const Create = () => {
     
   }
 
-  const schema = yup
+  const schema = yup // used to define validation rules
   .object({
     name: yup.string().required('Name is a required field'),
     projectmanager: yup.string().required('Project manager is a required field'),

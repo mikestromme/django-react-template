@@ -1,3 +1,5 @@
+# used to submit data from frontend to backend and vice versa
+
 from rest_framework import serializers
 from .models import * 
 
