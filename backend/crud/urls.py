@@ -10,12 +10,16 @@ naming conflicts between different apps and provides a way to organize URLs.
 
 """
 
-
+# when site is launched this is the first place the code will look
 
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls),  # called routes
     path('', include('api.urls'))
 ]
+
+
+# localhost:8000/admin
+# localhost:8000/ shows the views at api.urls
